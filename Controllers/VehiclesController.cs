@@ -14,7 +14,7 @@ namespace Vega.Controllers
     [Route("/api/vehicles")]
     public class VehiclesController : Controller
     { 
-        //This is testing of Github
+        
         private readonly IMapper mapper;
         private readonly IVehicleRepository repository;
         private readonly IUnitOfWork unitOfWork;
