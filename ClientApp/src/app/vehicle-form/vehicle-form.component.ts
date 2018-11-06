@@ -2,6 +2,8 @@ import { VehicleService } from './../Services/vehicle.service';
 import { Http } from '@angular/http';
 import { Component, OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
+import { ToastyService } from 'ng2-toasty';
+
 @Component({
   selector: 'app-vehicle-form',
   templateUrl: './vehicle-form.component.html',
@@ -15,7 +17,7 @@ export class VehicleFormComponent implements OnInit {
     features: [],
     contact: {}
   };
-  constructor(private VehicleService: VehicleService )
+  constructor(private VehicleService: VehicleService)
    {           
      
      }
@@ -39,7 +41,8 @@ export class VehicleFormComponent implements OnInit {
   }
   submit() {
     this.VehicleService.create(this.vehicle)
-      .subscribe(x => console.log(x));    
+      .subscribe(
+        x => console.log(x));    
 
   }
   private populateModels() {

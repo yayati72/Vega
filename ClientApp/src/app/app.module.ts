@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
@@ -12,8 +12,8 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { VehicleService } from './Services/vehicle.service';
-
-
+import { ToastyModule } from 'ng2-toasty';
+import { AppErrorHandler } from './app.error-handler';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +29,7 @@ import { VehicleService } from './Services/vehicle.service';
     FormsModule,
     HttpClientModule,
     HttpModule,
+    ToastyModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },      
       { path: 'vehicles/new', component: VehicleFormComponent },
@@ -36,7 +37,9 @@ import { VehicleService } from './Services/vehicle.service';
       { path: 'fetch-data', component: FetchDataComponent },
     ])
   ],
-  providers: [VehicleService ],
+  providers: [VehicleService,
+    { provide: ErrorHandler, useClass: AppErrorHandler}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
