@@ -43,12 +43,7 @@ namespace Vega
             //services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
             services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            // .AddJsonOptions(options =>
-            //{
-            //   options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
-            //   options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            //});
+           
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -67,6 +62,7 @@ namespace Vega
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
             }
             else
             {

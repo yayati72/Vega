@@ -8,6 +8,7 @@ using Vega.Models;
 using Vega.Persistence;
 using System;
 using Vega.Core;
+using Vega.Core.Models;
 
 namespace Vega.Controllers
 {
@@ -93,6 +94,14 @@ namespace Vega.Controllers
             var vehicleResource = mapper.Map<Vehicle, VehicleResource>(vehicle);
 
             return Ok(vehicleResource);
-        }        
+        }
+        [HttpGet]
+        public async Task<IEnumerable<VehicleResource>> GetVehicles(FilterResource filterResource)
+        {
+            var filter = mapper.Map<FilterResource, Filter>(filterResource);
+            var vehicles = await repository.GetVehicles(filter);
+
+            return mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(vehicles);
+        }
     }
 }
