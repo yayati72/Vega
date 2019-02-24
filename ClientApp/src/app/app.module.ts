@@ -15,6 +15,12 @@ import { VehicleService } from './Services/vehicle.service';
 import { ToastyModule } from 'ng2-toasty';
 import { AppErrorHandler } from './app.error-handler';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import { PaginationComponent } from './shared/pagination.component';
+import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
+import { AuthService } from './Services/auth.service';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +29,12 @@ import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
     CounterComponent,
     FetchDataComponent,
     VehicleFormComponent,
-    VehicleListComponent
+    VehicleListComponent,
+    PaginationComponent,
+    ViewVehicleComponent
+    
+    
+    
     
   ],
   imports: [
@@ -36,13 +47,14 @@ import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
       { path: '', redirectTo: 'vehicles', pathMatch:'full'},      
       { path: 'vehicles', component: VehicleListComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
-      { path: 'vehicles/:id', component: VehicleFormComponent },
+      { path: 'vehicles/edit:id', component: VehicleFormComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      {path: 'vehicles/:id',component:ViewVehicleComponent},
       { path: '**', redirectTo: 'home'}
     ])
   ],
-  providers: [VehicleService,
+  providers: [VehicleService,AuthService,
     { provide: ErrorHandler, useClass: AppErrorHandler}
   ],
   bootstrap: [AppComponent]

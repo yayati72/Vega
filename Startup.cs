@@ -1,17 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using AutoMapper;
-using Newtonsoft.Json.Serialization;
 using Vega.Persistence;
 using Vega.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Vega
 {
@@ -36,6 +34,9 @@ namespace Vega
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            
+
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             //services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -43,7 +44,19 @@ namespace Vega
             //services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
             services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-           
+
+            // 1. Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://yayatitrivedi.auth0.com/";
+                options.Audience = "https://api.vega.com";
+            });
+
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -80,6 +93,10 @@ namespace Vega
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
+
+            //Enable authontication
+            app.UseAuthentication();
+           
 
             app.UseSpa(spa =>
             {

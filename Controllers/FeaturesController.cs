@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vega.Models;
@@ -15,11 +17,12 @@ namespace Vega.Controllers
             this.context = context;
 
         }
-         [HttpGet("/api/features")]
+        [HttpGet("/api/features")]
+       
         public async Task<IEnumerable<Feature>> GetFeatures()
         {
             return await context.Features.ToListAsync();
-            
+
         }
 
     }

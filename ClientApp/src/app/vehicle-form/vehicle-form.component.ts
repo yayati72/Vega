@@ -45,7 +45,7 @@ export class VehicleFormComponent implements OnInit {
     private ngZone: NgZone,
     @Inject(ToastyService) private toastyService: ToastyService) {
     route.params.subscribe(p => {
-      this.vehicle.id = +p['id'];
+      this.vehicle.id = +p['id'] || 0;
     })
   }
 
@@ -94,10 +94,10 @@ export class VehicleFormComponent implements OnInit {
     // delete this.vehicle.modelId;
   }
   submit() {
-    if (this.vehicle.id)
-      this.VehicleService.update(this.vehicle)
-        .subscribe(
-          x => {
+    var result$ = (this.vehicle.id) ? this.VehicleService.update(this.vehicle) : this.VehicleService.create(this.vehicle);
+
+        result$.subscribe(
+          vehicle => {
             this.toastyService.success({
               title: 'Success',
               theme: 'bootstrap',
@@ -105,12 +105,9 @@ export class VehicleFormComponent implements OnInit {
               timeout: 5000,
               msg: 'The vehicle was successfully updated.'
             });
+            
+            this.router.navigate(['/vehicles/'], vehicle.id);
           });
-    else
-      this.VehicleService.create(this.vehicle)
-        .subscribe(
-          x => console.log(x));
-
   }
   delete() {
     if (confirm('Are you sure you want to delete this vehicle. This action can not be undone.'))

@@ -9,6 +9,8 @@ using Vega.Persistence;
 using System;
 using Vega.Core;
 using Vega.Core.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Vega.Controllers
 {
@@ -26,10 +28,11 @@ namespace Vega.Controllers
             this.mapper = mapper;
         }
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult>  CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
            // throw new Exception("Error");
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid)                
                 return BadRequest(ModelState);
 
             var vehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
@@ -47,6 +50,7 @@ namespace Vega.Controllers
 
         
         [HttpPut("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UpdateVehicle(int id,[FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
@@ -70,6 +74,7 @@ namespace Vega.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
             var vehicle = await repository.GetVehicle(id, includeRelated: false);
@@ -96,12 +101,13 @@ namespace Vega.Controllers
             return Ok(vehicleResource);
         }
         [HttpGet]
-        public async Task<IEnumerable<VehicleResource>> GetVehicles(FilterResource filterResource)
-        {
-            var filter = mapper.Map<FilterResource, Filter>(filterResource);
-            var vehicles = await repository.GetVehicles(filter);
+        public async Task<QueryResultResource<VehicleResource>> GetVehicles(VehicleQueryResource filterResource)
+     {
+            var filter = mapper.Map<VehicleQueryResource, VehicleQuery>(filterResource);
+            var queryResult = await repository.GetVehicles(filter);
+           return mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult);
 
-            return mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(vehicles);
+           // return mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(vehicles);
         }
     }
 }
